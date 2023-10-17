@@ -7,13 +7,17 @@ import (
 
 func main() {
 	sum := 0
+	sumch := make(chan int)
 	var wg sync.WaitGroup
 	for i := 0; i < 1000; i++ {
 		wg.Add(1)
 		go func() {
-			sum = sum + 1
+
 			wg.Done()
+			sum = sum + 1
+			sumch <- sum
 		}()
+		sum = <-sumch
 	}
 
 	wg.Wait()
